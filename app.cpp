@@ -1,10 +1,10 @@
 #include "app.h"
 #include "kernel.h"                 //タスク系
 #include "LineTraceRunner.h"
+#include "PIDController.h"
+#include "TrapezoidController.h"
+#include "DistanceCalculator.h"
 #include "GyroTraceRunner.h"
-#include "PIDCalculator.h"
-#include "TrapezoidCalculator.h"
-#include "DistanceDetector.h"
 #include "Motor.h" 
 #include "ForceSensor.h" 
 #include "ColorSensor.h"
