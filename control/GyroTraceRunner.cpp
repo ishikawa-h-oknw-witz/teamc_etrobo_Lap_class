@@ -1,41 +1,41 @@
-#include "ScenarioRunner.h"
+#include "GyroTraceRunner.h"
 #include "kernel.h"
 #include <stdlib.h>
 
 // コンストラクタ
-ScenarioRunner::ScenarioRunner(
+GyroTraceRunner::GyroTraceRunner(
     Motor& leftMotor,
     Motor& rightMotor,
-    DistanceCalculator& distanceCalculator,
-    PIDController& pidController,
-    TrapezoidController& trapezoidController)
+    DistanceDetector& distancedetector,
+    PIDCalculate& pidCalculate,
+    TrapezoidCalculate& trapezoidCalculate)
     : mLeftMotor(leftMotor),
       mRightMotor(rightMotor),
-      mDistanceCalculator(distanceCalculator),
-      mPIDController(pidController),
-      mTrapezoidController(trapezoidController),
+      mDistanceDetector(distancedetector),
+      mPIDCalculate(pidCalculate),
+      mTrapezoidCalculate(trapezoidCalculate),
       mBaseSpeed(60)
 {
 }
 
-void ScenarioRunner::move(bool direction, int distance)
+void GyroTraceRunner::move(bool direction, int distance)
 {
     mImu.resetHeading();                //ジャイロリセット
-    mDistanceCalculator.reset();        //距離リセット 
-    mPIDController.reset();             //微分項リセット  
+    mDistanceDetector.reset();        //距離リセット 
+    mPIDCalculate.reset();             //微分項リセット  
 
     // 直進用PID
-    mPIDController.setGain(
+    mPIDCalculate.setGain(
         3.0,
         0.0,
         0.0);
 
-    while(mDistanceCalculator.getDistance() < distance){
+    while(mDistanceDetector.getDistance() < distance){
         float current =
-            mDistanceCalculator.getDistance();
+            mDistanceDetector.getDistance();
 
         int speed =
-            mTrapezoidController.getSpeed(
+            mTrapezoidCalculate.getSpeed(
                 current,
                 distance
             );
@@ -50,7 +50,7 @@ void ScenarioRunner::move(bool direction, int distance)
         
         // 目標角度は0°
         float error = 0.0f - heading;
-        float correction = mPIDController.calculate(error);
+        float correction = mPIDCalculate.calculate(error);
 
         int leftPower = 0;
         int rightPower = 0;
@@ -75,12 +75,12 @@ void ScenarioRunner::move(bool direction, int distance)
     mRightMotor.brake();
 }
 
-void ScenarioRunner::turn(float targetHeading)
+void GyroTraceRunner::turn(float targetHeading)
 {
     mImu.resetHeading();
-    mPIDController.reset();
+    mPIDCalculate.reset();
 
-    mPIDController.setGain(
+    mPIDCalculate.setGain(
         0.6,
         0.0,
         0.0);
@@ -122,7 +122,7 @@ void ScenarioRunner::turn(float targetHeading)
 
         // PID制御
         // 誤差が5°を超える間はPID制御により旋回出力を計算する。
-        int turnPower = abs(mPIDController.calculate(error)); 
+        int turnPower = abs(mPIDCalculate.calculate(error)); 
 
         //PID計算結果が40以上なら40に制限し、30以下なら30に引き上げる
         //上限を決めるのは安定させるため、下限を決めるのは走行体のスタックを防ぐため

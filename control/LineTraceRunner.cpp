@@ -1,26 +1,26 @@
-#include "LineTracer.h"
+#include "LineTraceRunner.h"
 
 // コンストラクタ
-LineTracer::LineTracer(
+LineTraceRunner::LineTraceRunner(
     Motor& leftMotor,
     Motor& rightMotor,
     ColorSensor& colorSensor,
-    PIDController& pidController)
+    PIDCalculate& pidCalculate)
     : mLeftMotor(leftMotor),
       mRightMotor(rightMotor),
       mColorSensor(colorSensor),
-      mPIDController(pidController),
+      mPIDCalculate(pidCalculate),
       mTargetReflection(50),
       mBaseSpeed(60)
 {
 }
 
-void LineTracer::setBaseSpeed(int speed)
+void LineTraceRunner::setBaseSpeed(int speed)
 {
     mBaseSpeed = speed;
 }
 
-void LineTracer::run()
+void LineTraceRunner::run()
 {
     int turn = 0;
 
@@ -33,7 +33,7 @@ void LineTracer::run()
         mTargetReflection - reflection;
 
     // PID制御依頼
-    turn = mPIDController.calculate(error);
+    turn = mPIDCalculate.calculate(error);
 
     // モータ出力
     mLeftMotor.setPower(
