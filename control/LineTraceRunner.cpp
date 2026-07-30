@@ -1,7 +1,7 @@
-#include "LineTracer.h"
+#include "LineTraceRunner.h"
 
 // コンストラクタ
-LineTracer::LineTracer(
+LineTraceRunner::LineTraceRunner(
     Motor& leftMotor,
     Motor& rightMotor,
     ColorSensor& colorSensor,
@@ -15,12 +15,12 @@ LineTracer::LineTracer(
 {
 }
 
-void LineTracer::setBaseSpeed(int speed)
+void LineTraceRunner::setBaseSpeed(int speed)
 {
     mBaseSpeed = speed;
 }
 
-void LineTracer::run()
+void LineTraceRunner::run()
 {
     int turn = 0;
 
