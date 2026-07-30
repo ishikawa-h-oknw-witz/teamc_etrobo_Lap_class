@@ -1,8 +1,8 @@
 #include "TargetDistanceJudge.h"
 
 TargetDistanceJudge::TargetDistanceJudge(
-    DistanceCalculator& calculator)
-    : mDistanceCalculator(calculator),
+    DistanceDetector& distancedetector)
+    : mDistanceDetector(distancedetector),
       mTargetDistance(0)
 {
 }
@@ -14,5 +14,5 @@ void TargetDistanceJudge::setTargetDistance(int distance)
 
 bool TargetDistanceJudge::judge()
 {
-    return mDistanceCalculator.getDistance() >= mTargetDistance;
+    return mDistanceDetector.getDistance() >= mTargetDistance;
 }

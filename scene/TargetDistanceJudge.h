@@ -1,18 +1,18 @@
 #pragma once
 
 #include "ISceneJudge.h"
-#include "DistanceCalculator.h"
+#include "DistanceDetector.h"
 
 class TargetDistanceJudge : public ISceneJudge
 {
 public:
-    TargetDistanceJudge(DistanceCalculator& calculator);
+    TargetDistanceJudge(DistanceDetector& distancedetector);
 
     void setTargetDistance(int distance);
 
     bool judge() override;
 
 private:
-    DistanceCalculator& mDistanceCalculator;
+    DistanceCalculator& mDistanceDetector;
     int mTargetDistance;
 };
