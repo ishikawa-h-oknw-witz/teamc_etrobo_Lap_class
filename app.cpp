@@ -44,24 +44,6 @@ GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCo
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
 
-//{走行距離(mmまで)
-struct Distance
-{
-    int distance;
-};
-
-//ラップまでのライントレース走行区間分け
-Distance distances[] = {
-    {600},
-    {900},
-    {1400},
-    {1700},
-    {2100},
-    {2600},
-    {4400},
-    {5400}
-};
-
 /* ログタスク */
 void logger_task(intptr_t exinf)
 {
