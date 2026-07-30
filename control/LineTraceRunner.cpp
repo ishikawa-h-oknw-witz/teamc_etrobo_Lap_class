@@ -5,11 +5,11 @@ LineTracer::LineTracer(
     Motor& leftMotor,
     Motor& rightMotor,
     ColorSensor& colorSensor,
-    PIDController& pidController)
+    PIDCalculate& pidCalculate)
     : mLeftMotor(leftMotor),
       mRightMotor(rightMotor),
       mColorSensor(colorSensor),
-      mPIDController(pidController),
+      mPIDCalculate(pidCalculate),
       mTargetReflection(50),
       mBaseSpeed(60)
 {
@@ -33,7 +33,7 @@ void LineTracer::run()
         mTargetReflection - reflection;
 
     // PID制御依頼
-    turn = mPIDController.calculate(error);
+    turn = mPIDCalculate.calculate(error);
 
     // モータ出力
     mLeftMotor.setPower(

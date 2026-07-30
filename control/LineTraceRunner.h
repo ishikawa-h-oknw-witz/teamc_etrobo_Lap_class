@@ -1,5 +1,5 @@
-#ifndef LINE_TRACER_H
-#define LINE_TRACER_H
+#ifndef LINE_TRACE_RUNNNER_H
+#define LINE_TRACE_RUNNNER_H
 
 #include "ColorSensor.h"
 #include "PIDController.h"
@@ -8,10 +8,10 @@
 
 using namespace spikeapi;
 
-class LineTracer
+class LineTraceRunner
 {
 public:
-    LineTracer(
+    LineTraceRunner(
         Motor& leftMotor,
         Motor& rightMotor,
         ColorSensor& colorSensor,
