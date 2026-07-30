@@ -56,111 +56,29 @@ void main_task(intptr_t exinf)
 {
     /* Bluetooth初期化＆接続待ち＆ログタスク起動100msec周期 */
     logger.init();
-    sta_cyc(LOGGER_TASK_CYC);
 
-    /* ボタン押下フラグ */
-    bool measuring = false;
-
+    //フォースセンサボタン押下待ち
     while (!forceSensor.isTouched());
-    while (true)
+
+    //HSV取得
+    ColorSensor::HSV hsv;
+
+    //メインループ10msec周期
+    while(true)
     {
-        //テスト用
-        if (forceSensor.isTouched())
+        colorSensor.getHSV(hsv);
+        lineTraceRunner.run();
+        // 青
+        if (hsv.h >= 200 && hsv.h <= 260 &&
+            hsv.s >= 50 &&
+            hsv.v >= 20)
         {
-            // ボタンを離すまで待つ（チャタリング防止）
-            while (forceSensor.isTouched())
-            {
-                tslp_tsk(10000);
-            }
-
-            if (!measuring)
-            {
-                measuring = true;
-            }
-            else
-            {
-                leftWheel.stop();
-                rightWheel.stop();
-                break;
-            }
+            Logger::printf("青検知");
+            leftWheel.stop();
+            rightWheel.stop();
+            break;
         }
-
-        if (measuring){
-            //HSV取得
-            ColorSensor::HSV hsv;
-            
-            lineTraceRunner.setBaseSpeed(50);
-            pidController.setGain(
-                0.6,
-                0.0,
-                0.0);
-
-            while(true)
-            {
-                colorSensor.getHSV(hsv);
-                lineTraceRunner.run();
-                // 青
-                if (hsv.h >= 200 && hsv.h <= 260 &&
-                    hsv.s >= 50 &&
-                    hsv.v >= 20)
-                {
-                    Logger::printf("青検知");
-                    leftWheel.stop();
-                    rightWheel.stop();
-                    break;
-                }
-                // 赤
-                else if ((hsv.h >= 0 && hsv.h <= 20) ||
-                    (hsv.h >= 340 && hsv.h <= 360))
-                {
-                    if (hsv.s >= 50 &&
-                        hsv.v >= 20)
-                    {
-                        Logger::printf("赤検知");
-                        leftWheel.stop();
-                        rightWheel.stop();
-                        break;
-                    }
-                }
-                // 黄
-                else if (hsv.h >= 40 && hsv.h <= 80 &&
-                    hsv.s >= 50 &&
-                    hsv.v >= 20)
-                {
-                    Logger::printf("黄検知");
-                    leftWheel.stop();
-                    rightWheel.stop();
-                    break;
-                }
-                // 緑
-                else if (hsv.h >= 90 && hsv.h <= 160 &&
-                    hsv.s >= 50 &&
-                    hsv.v >= 20)
-                {
-                    Logger::printf("緑検知");
-                    leftWheel.stop();
-                    rightWheel.stop();
-                    break;
-                }
-            }
-
-            /*gyroTraceRunner.move(true, 1000);
-            tslp_tsk(100000);
-            gyroTraceRunner.turn(90);
-            tslp_tsk(100000);
-            */
-            /*for(int no = 8; no <= 13; no++)
-            {
-                runGate(no);
-                while (!forceSensor.isTouched());
-                gyroTraceRunner.move(true, 40);
-                tslp_tsk(100000);
-                gyroTraceRunner.turn(90);
-                tslp_tsk(100000);
-            }*/
-   
-            //break;
-        }
+        tslp_tsk(10 * 1000);
     }
     ext_tsk(); 
 }
