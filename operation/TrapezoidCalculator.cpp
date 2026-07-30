@@ -1,6 +1,6 @@
-#include "TrapezoidController.h"
+#include "TrapezoidCalculator.h"
 
-TrapezoidController::TrapezoidController()
+TrapezoidCalculator::TrapezoidCalculator()
     : mStartSpeed(30),
       mMaxSpeed(100),
       mEndSpeed(30),
@@ -9,7 +9,7 @@ TrapezoidController::TrapezoidController()
 {
 }
 
-void TrapezoidController::setParameter(
+void TrapezoidCalculator::setParameter(
     int startSpeed,
     int maxSpeed,
     int endSpeed,
@@ -23,7 +23,7 @@ void TrapezoidController::setParameter(
     mDecelDistance = decelDistance;
 }
 
-int TrapezoidController::getSpeed(
+int TrapezoidCalculator::getSpeed(
     float currentDistance,
     float totalDistance)
 {
