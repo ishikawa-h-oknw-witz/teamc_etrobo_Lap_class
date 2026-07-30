@@ -1,9 +1,9 @@
 #pragma once
 
-class SceneParameter
+class SceneManager
 {
 public:
-    SceneParameter(
+    SceneManager(
         LineTraceRunner& linetraceRunner,
         GyroTraceRunner& gyrotraceRunner,
         PIDCalculate& pidCalculate,

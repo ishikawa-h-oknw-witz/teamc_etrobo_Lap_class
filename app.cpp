@@ -1,10 +1,10 @@
 #include "app.h"
 #include "kernel.h"                 //タスク系
 #include "LineTraceRunner.h"
+#include "PIDController.h"
+#include "TrapezoidController.h"
+#include "DistanceCalculator.h"
 #include "GyroTraceRunner.h"
-#include "PIDCalculator.h"
-#include "TrapezoidCalculator.h"
-#include "DistanceDetector.h"
 #include "Motor.h" 
 #include "ForceSensor.h" 
 #include "ColorSensor.h"
@@ -43,24 +43,6 @@ DistanceCalculator distanceCalculator(leftWheel, rightWheel);
 GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidController, trapezoidController);
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
-
-//{走行距離(mmまで)
-struct Distance
-{
-    int distance;
-};
-
-//ラップまでのライントレース走行区間分け
-Distance distances[] = {
-    {600},
-    {900},
-    {1400},
-    {1700},
-    {2100},
-    {2600},
-    {4400},
-    {5400}
-};
 
 /* ログタスク */
 void logger_task(intptr_t exinf)
