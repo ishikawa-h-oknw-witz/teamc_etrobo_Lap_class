@@ -1,10 +1,10 @@
-#ifndef TRAPEZOIDCONTROLLER_H
-#define TRAPEZOIDCONTROLLER_H
+#ifndef TRAPEZOID_CALCULATOR_H
+#define TRAPEZOID_CALCULATOR_H
 
-class TrapezoidController
+class TrapezoidCalculator
 {
 public:
-    TrapezoidController();
+    TrapezoidCalculator();
 
     void setParameter(
         int startSpeed,

@@ -1,7 +1,7 @@
-#include "DistanceCalculator.h"
+#include "DistanceDetector.h"
 #include <stdlib.h>
 
-DistanceCalculator::DistanceCalculator(
+DistanceDetector::DistanceDetector(
     Motor& leftMotor,
     Motor& rightMotor)
     : mLeftMotor(leftMotor),
@@ -9,13 +9,13 @@ DistanceCalculator::DistanceCalculator(
 {
 }
 
-void DistanceCalculator::reset()
+void DistanceDetector::reset()
 {
     mLeftMotor.resetCount();
     mRightMotor.resetCount();
 }
 
-float DistanceCalculator::getDistance()
+float DistanceDetector::getDistance()
 {
     int leftAngle =
         abs(mLeftMotor.getCount());
