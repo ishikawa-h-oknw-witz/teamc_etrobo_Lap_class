@@ -1,10 +1,10 @@
-#ifndef PID_CONTROLLER_H
-#define PID_CONTROLLER_H
+#ifndef PID_CALCULATOR_H
+#define PID_CALCULATOR_H
 
-class PIDController
+class PIDCalculator
 {
 public:
-    PIDController();
+    PIDCalculator();
     
     void setGain(float kp, float ki, float kd);
     
