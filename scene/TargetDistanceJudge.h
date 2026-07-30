@@ -13,6 +13,6 @@ public:
     bool judge() override;
 
 private:
-    DistanceCalculator& mDistanceDetector;
+    DistanceDetector& mDistanceDetector;
     int mTargetDistance;
 };
