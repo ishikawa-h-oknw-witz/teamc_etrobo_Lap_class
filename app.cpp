@@ -1,10 +1,10 @@
 #include "app.h"
 #include "kernel.h"                 //タスク系
-#include "LineTracer.h"
+#include "LineTraceRunner.h"
+#include "GyroTraceRunner.h"
 #include "PIDCalculator.h"
 #include "TrapezoidCalculator.h"
 #include "DistanceDetector.h"
-#include "ScenarioRunner.h"
 #include "Motor.h" 
 #include "ForceSensor.h" 
 #include "ColorSensor.h"
@@ -38,32 +38,28 @@ Clock clock;
 PIDController pidController;
 TrapezoidController trapezoidController;
 
-LineTracer lineTracer(leftWheel, rightWheel, colorSensor, pidController);
+LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidController);
 DistanceCalculator distanceCalculator(leftWheel, rightWheel);
-ScenarioRunner scenarioRunner(leftWheel, rightWheel, distanceCalculator, pidController, trapezoidController);
+GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidController, trapezoidController);
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
 
-
-//{走行距離(mmまで), 走行速度, 比例ゲイン, 積分ゲイン, 微分ゲイン}
-struct Section {
+//{走行距離(mmまで)
+struct Distance
+{
     int distance;
-    int speed;
-    float kp;
-    float ki;
-    float kd;
 };
 
-//{走行距離(mmまで), 走行速度, 比例ゲイン, 積分ゲイン, 微分ゲイン}
-Section sections[] = {
-    {600, 100, 0.6, 0.0, 0.2}, //区間１　直進　約60cm
-    {900, 70, 0.6, 0.0, 0.4},  //区間２　緩やかなカーブ　約30cm
-    {1400, 100, 0.6, 0.0, 0.2},   //区間３　直進　約50cm
-    {1700, 70, 0.6, 0.0, 0.4},  //区間４　緩やかなカーブ　約30cm
-    {2100, 100, 0.5, 0.0, 0.2},  //区間５　直進　約40cm
-    {2600, 70, 0.6, 0.0, 0.4}, //区間６　緩やかなカーブ　約30cm
-    {4400, 70, 0.5, 0.0, 0.4},  //区間７　蛇行　約180cm
-    {5400, 100, 0.6, 0.0, 0.2}   //区間８　直進　約100cm
+//ラップまでのライントレース走行区間分け
+Distance distances[] = {
+    {600},
+    {900},
+    {1400},
+    {1700},
+    {2100},
+    {2600},
+    {4400},
+    {5400}
 };
 
 /* ログタスク */
@@ -111,7 +107,7 @@ void main_task(intptr_t exinf)
             //HSV取得
             ColorSensor::HSV hsv;
             
-            lineTracer.setBaseSpeed(50);
+            lineTraceRunner.setBaseSpeed(50);
             pidController.setGain(
                 0.6,
                 0.0,
@@ -120,7 +116,7 @@ void main_task(intptr_t exinf)
             while(true)
             {
                 colorSensor.getHSV(hsv);
-                lineTracer.run();
+                lineTraceRunner.run();
                 // 青
                 if (hsv.h >= 200 && hsv.h <= 260 &&
                     hsv.s >= 50 &&
@@ -166,18 +162,18 @@ void main_task(intptr_t exinf)
                 }
             }
 
-            /*scenarioRunner.move(true, 1000);
+            /*gyroTraceRunner.move(true, 1000);
             tslp_tsk(100000);
-            scenarioRunner.turn(90);
+            gyroTraceRunner.turn(90);
             tslp_tsk(100000);
             */
             /*for(int no = 8; no <= 13; no++)
             {
                 runGate(no);
                 while (!forceSensor.isTouched());
-                scenarioRunner.move(true, 40);
+                gyroTraceRunner.move(true, 40);
                 tslp_tsk(100000);
-                scenarioRunner.turn(90);
+                gyroTraceRunner.turn(90);
                 tslp_tsk(100000);
             }*/
    
@@ -267,10 +263,10 @@ void runTopRow(int No)
 {
     runBasePointToQr();
     runQrToQr(No);
-    scenarioRunner.turn(-90);
+    gyroTraceRunner.turn(-90);
     tslp_tsk(100000);
     passGate();
-    scenarioRunner.turn(-90);
+    gyroTraceRunner.turn(-90);
     tslp_tsk(100000);
     runQrToQr(No);
     runQrToBasePoint();
@@ -282,7 +278,7 @@ void runMiddleRow(int No)
     runBasePointToQr();
     runQrToQr(No);
     middle_passGate();
-    scenarioRunner.turn(-180);
+    gyroTraceRunner.turn(-180);
     tslp_tsk(100000);
     runQrToQr(No);
     runQrToBasePoint();
@@ -293,10 +289,10 @@ void runBottomRow(int No)
 {
     runBasePointToQr();
     runQrToQr(No);
-    scenarioRunner.turn(90);
+    gyroTraceRunner.turn(90);
     tslp_tsk(100000);
     passGate();
-    scenarioRunner.turn(90);
+    gyroTraceRunner.turn(90);
     tslp_tsk(100000);
     runQrToQr(No);
     runQrToBasePoint();
@@ -304,31 +300,31 @@ void runBottomRow(int No)
 
 void runBasePointToQr()
 {
-    scenarioRunner.move(true, 260);
+    gyroTraceRunner.move(true, 260);
 }
 
 void runQrToBasePoint()
 {
-    scenarioRunner.move(true, 260);
+    gyroTraceRunner.move(true, 260);
 }
 
 void runQrToQr(int cell)
 {
-    scenarioRunner.move(true, 250*cell);
+    gyroTraceRunner.move(true, 250*cell);
 }
 
 void passGate()
 {
-    scenarioRunner.move(true, 260);
+    gyroTraceRunner.move(true, 260);
     tslp_tsk(100*1000);
-    scenarioRunner.move(false, 260);
+    gyroTraceRunner.move(false, 260);
 }
 
 void middle_passGate()
 {
-    scenarioRunner.move(true, 130);
+    gyroTraceRunner.move(true, 130);
     tslp_tsk(100*1000);
-    scenarioRunner.move(false, 130);
+    gyroTraceRunner.move(false, 130);
 }
 
 
