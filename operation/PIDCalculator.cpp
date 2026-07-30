@@ -1,7 +1,7 @@
-#include "PIDController.h"
+#include "PIDCalculator.h"
  
 // コンストラクタ
-PIDController::PIDController()
+PIDCalculator::PIDCalculator()
     : mKp(0.6),
       mKi(0.0),
       mKd(0.1),
@@ -10,20 +10,20 @@ PIDController::PIDController()
 {
 }
 
-void PIDController::setGain(float kp, float ki, float kd)
+void PIDCalculator::setGain(float kp, float ki, float kd)
 {
     mKp = kp;
     mKi = ki;
     mKd = kd;
 }
 
-void PIDController::reset()
+void PIDCalculator::reset()
 {
     mIntegral = 0.0f;
     mPreviousError = 0.0f;
 }
 
-float PIDController::calculate(float error)
+float PIDCalculator::calculate(float error)
 {
     //float dt = 0.01f;
     

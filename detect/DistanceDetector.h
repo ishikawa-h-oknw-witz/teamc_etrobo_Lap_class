@@ -1,15 +1,15 @@
-#ifndef DISTANCE_CALCULATOR_H
-#define DISTANCE_CALCULATOR_H
+#ifndef DISTANCE_DETECTOR_H
+#define DISTANCE_DETECTOR_H
 
 #include "Motor.h"
 
 using namespace spikeapi;
 
-class DistanceCalculator
+class DistanceDetector
 {
 public:
 
-    DistanceCalculator(
+    DistanceDetector(
         Motor& leftMotor,
         Motor& rightMotor);
 
