@@ -1,5 +1,7 @@
 //攻略パッケージ
 #include "app.h"
+//シーンパッケージ
+#include "SceneManager.h"
 //制御パッケージ            
 #include "LineTraceRunner.h"
 #include "GyroTraceRunner.h"
@@ -41,6 +43,10 @@ DistanceCalculator distanceCalculator(leftWheel, rightWheel);
 
 LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidCalculator);
 GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCalculator, trapezoidCalculator);
+
+TargetDistanceDetector targetDistanceDetector(distanceCalculator);
+SceneManager sceneManager(lineTraceRunner, gyroTraceRunner, pidCalculator, trapezoidCalculator, targetDistanceDetector);
+
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
 
@@ -63,6 +69,11 @@ void main_task(intptr_t exinf)
     //HSV構造体定義
     ColorSensor::HSV hsv;
 
+    int sceneId = 0;
+
+    // 最初のシーンを設定
+    sceneManager.setParameter(sceneId);
+
     //メインループ10msec周期
     while(true)
     {
@@ -70,6 +81,20 @@ void main_task(intptr_t exinf)
         colorSensor.getHSV(hsv);
         //ライントレース走行開始
         lineTraceRunner.run();
+
+        // シーン終了判定
+        if (sceneManager.isSceneFinished())
+        {
+            sceneId++;
+
+            if (sceneId >= 8)
+            {
+                break;  // 全シーン終了
+            }
+
+            sceneManager.setParameter(sceneId);
+        }
+
         // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&
             hsv.s >= 50 &&

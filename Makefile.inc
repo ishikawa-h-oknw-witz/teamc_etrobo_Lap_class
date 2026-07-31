@@ -6,6 +6,8 @@ APPL_CXXOBJS += \
     operation/TrapezoidCalculator.o \
     control/LineTraceRunner.o \
     control/GyroTraceRunner.o \
+    scene/SceneManager.o \
+    detect/TargetDistanceDetector.o \
     Logger.o \
 
 SRCLANG := c++
