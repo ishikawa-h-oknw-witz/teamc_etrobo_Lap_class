@@ -56,7 +56,8 @@ void Logger::output()
         "Heading=%.2f "
         "Ref=%d "
         "H=%d S=%d V=%d "
-        "L=%d R=%d\r\n",
+        "L=%d R=%d "
+        "LEnc=%d REnc=%d\r\n",
 
         mImu.getHeading(),
         mColorSensor.getReflection(),
@@ -66,6 +67,9 @@ void Logger::output()
         hsv.v,
 
         mLeftMotor.getPower(),
-        mRightMotor.getPower()
+        mRightMotor.getPower(),
+
+        mLeftMotor.getCount(),
+        mRightMotor.getCount(),
     );
 }
