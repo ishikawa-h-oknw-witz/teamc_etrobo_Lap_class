@@ -98,7 +98,7 @@ void main_task(intptr_t exinf)
         // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&
             hsv.s >= 50 &&
-            hsv.v >= 20)
+            hsv.v >= 20 && hsv.v <= 60)
         {
             Logger::printf("青検知");
             leftWheel.stop();
