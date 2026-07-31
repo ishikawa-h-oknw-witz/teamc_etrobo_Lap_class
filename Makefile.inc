@@ -1,11 +1,11 @@
 mkfile_path := $(dir $(lastword $(MAKEFILE_LIST)))
 
 APPL_CXXOBJS += \
-    control/PIDController.o \
-    control/DistanceCalculator.o \
-    control/TrapezoidController.o \
-    runner/LineTracer.o \
-    runner/ScenarioRunner.o \
+    operation/PIDCalculator.o \
+    operation/DistanceCalculator.o \
+    operation/TrapezoidCalculator.o \
+    control/LineTraceRunner.o \
+    control/GyroTraceRunner.o \
     Logger.o \
 
 SRCLANG := c++
@@ -21,15 +21,17 @@ APPL_DIRS += \
     $(mkfile_path)app \
     $(mkfile_path)unit \
     $(mkfile_path)control \
+    $(mkfile_path)detect \
     $(mkfile_path)device \
-    $(mkfile_path)runner \
-    $(mkfile_path)state
+    $(mkfile_path)operation \
+    $(mkfile_path)scene \
 
 INCLUDES += \
 	-I$(mkfile_path)../../../drivers/include \
 	-I$(mkfile_path)../../../drivers/include/spike \
 	-I$(mkfile_path)../../../drivers/include/libcpp/spike \
 	-I$(mkfile_path)control \
-    -I$(mkfile_path)device \
-	-I$(mkfile_path)runner \
-    -I$(mkfile_path)state \
+    -I$(mkfile_path)detect \
+	-I$(mkfile_path)device \
+    -I$(mkfile_path)operation \
+    -I$(mkfile_path)scene \
