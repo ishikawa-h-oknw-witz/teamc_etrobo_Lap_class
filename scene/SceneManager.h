@@ -6,6 +6,7 @@
 #include "TrapezoidCalculator.h"
 #include "IEventDetector.h"
 #include "TargetDistanceDetector.h"
+#include "DistanceCalculator.h"
 
 class SceneManager
 {
@@ -15,10 +16,13 @@ public:
         GyroTraceRunner& gyroTraceRunner,
         PIDCalculator& pidCalculator,
         TrapezoidCalculator& trapezoidCalculator,
-        TargetDistanceDetector& targetDistanceDetector);
+        TargetDistanceDetector& targetDistanceDetector,
+        DistanceCalculator& distanceCalculator);
 
+    int getSceneID();
+    void setSceneID(int sceneid);
+    bool SceneExecute();
     void setParameter(int sceneId);
-    bool isSceneFinished();
 
 private:
     LineTraceRunner& mLineTraceRunner;
@@ -26,8 +30,8 @@ private:
     PIDCalculator& mPIDCalculator;
     TrapezoidCalculator& mTrapezoidCalculator;
     TargetDistanceDetector& mTargetDistanceDetector;
-
-    IEventDetector* mEventDetector;
+    DistanceCalculator& mDistanceCalculator;
 
     int mSceneId;
+    IEventDetector* mEventDetector;
 };
