@@ -1,19 +1,33 @@
 #pragma once
+        
+#include "LineTraceRunner.h"
+#include "GyroTraceRunner.h"
+#include "PIDCalculator.h"
+#include "TrapezoidCalculator.h"
+#include "IEventDetector.h"
+#include "TargetDistanceDetector.h"
 
 class SceneManager
 {
 public:
     SceneManager(
-        LineTraceRunner& linetraceRunner,
-        GyroTraceRunner& gyrotraceRunner,
-        PIDCalculate& pidCalculate,
-        TrapezoidCalculator& trapezoidCalculator);
+        LineTraceRunner& lineTraceRunner,
+        GyroTraceRunner& gyroTraceRunner,
+        PIDCalculator& pidCalculator,
+        TrapezoidCalculator& trapezoidCalculator,
+        TargetDistanceDetector& targetDistanceDetector);
 
-    void setParameter(int scene_id);
+    void setParameter(int sceneId);
+    bool isSceneFinished();
 
 private:
     LineTraceRunner& mLineTraceRunner;
     GyroTraceRunner& mGyroTraceRunner;
-    PIDCalculate& mPIDCalculate;
+    PIDCalculator& mPIDCalculator;
     TrapezoidCalculator& mTrapezoidCalculator;
+    TargetDistanceDetector& mTargetDistanceDetector;
+
+    IEventDetector* mEventDetector;
+
+    int mSceneId;
 };

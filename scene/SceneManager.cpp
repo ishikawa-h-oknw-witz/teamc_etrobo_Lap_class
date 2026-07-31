@@ -1,47 +1,85 @@
 #include "SceneManager.h"
 
-//{走行距離(mmまで), 走行速度, 比例ゲイン, 積分ゲイン, 微分ゲイン}
+enum class JudgeType
+{
+    Distance,
+    Angle,
+    Color
+};
+
+struct Section
+{
+    int speed;
+    float kp;
+    float ki;
+    float kd;
+
+    JudgeType judgeType;
+
+    int targetDistance;
+    //float targetAngle;
+    //Color targetColor;
+};
+
+// {速度, Kp, Ki, Kd, 判定種類, 目標距離, 目標角度, 目標色}
 Section sections[] = {
-    {600, 100, 0.6, 0.0, 0.2}, //区間１　直進　約60cm
-    {900, 70, 0.6, 0.0, 0.4},  //区間２　緩やかなカーブ　約30cm
-    {1400, 100, 0.6, 0.0, 0.2},   //区間３　直進　約50cm
-    {1700, 70, 0.6, 0.0, 0.4},  //区間４　緩やかなカーブ　約30cm
-    {2100, 100, 0.5, 0.0, 0.2},  //区間５　直進　約40cm
-    {2600, 70, 0.6, 0.0, 0.4}, //区間６　緩やかなカーブ　約30cm
-    {4400, 70, 0.5, 0.0, 0.4},  //区間７　蛇行　約180cm
-    {5400, 100, 0.6, 0.0, 0.2}   //区間８　直進　約100cm
+    {100, 0.6, 0.0, 0.2, JudgeType::Distance,  600}, // 区間1
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance,  900}, // 区間2
+    {100, 0.6, 0.0, 0.2, JudgeType::Distance, 1400}, // 区間3
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, 1700}, // 区間4
+    {100, 0.5, 0.0, 0.2, JudgeType::Distance, 2100}, // 区間5
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, 2600}, // 区間6
+    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, 4400}, // 区間7
+    {100, 0.6, 0.0, 0.2, JudgeType::Distance, 5400}  // 区間8
 };
 
 //コンストラクタ
 SceneManager::SceneManager(
-    LineTraceRunner& linetraceRunner,
-    GyroTraceRunner& gyrotraceRunner,
-    PIDCalculate& pidCalculate,
-    TrapezoidCalculator& trapezoidCalculator)
-    : mLineTraceRunner(linetraceRunner),
-      mGyroTraceRunner(gyrotraceRunner),
-      mPIDCalculate(pidCalculate),
-      mTrapezoidCalculate(trapezoidCalculate)
+    LineTraceRunner& lineTraceRunner,
+    GyroTraceRunner& gyroTraceRunner,
+    PIDCalculator& pidCalculator,
+    TrapezoidCalculator& trapezoidCalculator,
+    TargetDistanceDetector& targetDistanceDetector)
+    : mLineTraceRunner(lineTraceRunner),
+      mGyroTraceRunner(gyroTraceRunner),
+      mPIDCalculator(pidCalculator),
+      mTrapezoidCalculator(trapezoidCalculator),
+      mTargetDistanceDetector(targetDistanceDetector)
 {
 }
 
-void SceneManager::setParameter(int scene_id)
+void SceneManager::setParameter(int sceneId)
 {
-    const Section& section = sections[scene_id];
+    mSceneId = sceneId;
 
-    // ライントレース走行
+    const Section& section = sections[sceneId];
+
+    // ライントレース
     mLineTraceRunner.setBaseSpeed(section.speed);
 
-    // ジャイロトレース走行
-    //mGyroTraceRunner.setBaseSpeed(section.speed);
+    // ジャイロトレース(ラリーで必要)
 
     // PID
-    mPIDCalculate.setGain(
+    mPIDCalculator.setGain(
         section.kp,
         section.ki,
-        section.kd
-    );
+        section.kd);
 
-    // 台形制御（ラリーで必要）
+    switch (section.judgeType)
+    {
+    case JudgeType::Distance:
+        // シーン終了距離
+        mTargetDistanceDetector.setTargetDistance(section.targetDistance);
+        mEventDetector = &mTargetDistanceDetector;
+        break;
+        
+    default:
+        break;
+    }
+    // 台形制御(ラリーで必要)
+}
 
+bool SceneManager::isSceneFinished()
+{
+    return mEventDetector->judge();
 }

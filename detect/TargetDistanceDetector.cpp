@@ -1,8 +1,8 @@
 #include "TargetDistanceDetector.h"
 
 TargetDistanceDetector::TargetDistanceDetector(
-    DistanceCalculate& distanceCalculate)
-    : mDistanceCalculate(distanceCalculate),
+    DistanceCalculator& distanceCalculator)
+    : mDistanceCalculator(distanceCalculator),
       mTargetDistance(0)
 {
 }
@@ -14,5 +14,5 @@ void TargetDistanceDetector::setTargetDistance(int distance)
 
 bool TargetDistanceDetector::judge()
 {
-    return mDistanceCalculate.getDistance() >= mTargetDistance;
+    return mDistanceCalculator.getDistance() >= mTargetDistance;
 }

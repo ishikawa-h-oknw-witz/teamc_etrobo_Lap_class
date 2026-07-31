@@ -3,7 +3,7 @@
 #include "IEventDetector.h"
 #include "DistanceCalculator.h"
 
-class TargetDistanceDetector : public ISceneJudge
+class TargetDistanceDetector : public IEventDetector
 {
 public:
     TargetDistanceDetector(DistanceCalculator& distanceCalculator);
