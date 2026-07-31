@@ -1,4 +1,5 @@
 #include "LineTraceRunner.h"
+#include "Logger.h"
 
 // コンストラクタ
 LineTraceRunner::LineTraceRunner(

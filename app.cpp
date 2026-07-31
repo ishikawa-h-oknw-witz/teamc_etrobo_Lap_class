@@ -85,6 +85,8 @@ void main_task(intptr_t exinf)
         Logger::printf("ループ");
         tslp_tsk(10 * 1000);
     }
+    leftWheel.stop();
+    rightWheel.stop();
     ext_tsk(); 
 }
 
