@@ -37,9 +37,9 @@ ColorSensor colorSensor(EPort::PORT_E);
 
 PIDCalculator pidCalculator;
 TrapezoidCalculator trapezoidCalculator;
+DistanceCalculator distanceCalculator(leftWheel, rightWheel);
 
 LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidCalculator);
-DistanceCalculator distanceCalculator(leftWheel, rightWheel);
 GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCalculator, trapezoidCalculator);
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
