@@ -70,6 +70,6 @@ void Logger::output()
         mRightMotor.getPower(),
 
         mLeftMotor.getCount(),
-        mRightMotor.getCount(),
+        mRightMotor.getCount()
     );
 }
