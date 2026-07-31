@@ -2,7 +2,7 @@
 #define LINE_TRACE_RUNNNER_H
 
 #include "ColorSensor.h"
-#include "PIDController.h"
+#include "PIDCalculator.h"
 #include "Motor.h"
 #include "kernel.h"
 
@@ -15,7 +15,7 @@ public:
         Motor& leftMotor,
         Motor& rightMotor,
         ColorSensor& colorSensor,
-        PIDController& pidController);
+        PIDCalculator& pidController);
 
     void setBaseSpeed(int speed);
 
@@ -28,7 +28,7 @@ private:
 
     ColorSensor& mColorSensor;
 
-    PIDController& mPIDController;
+    PIDCalculator& mPIDCalculator;
 
     int mTargetReflection;
 

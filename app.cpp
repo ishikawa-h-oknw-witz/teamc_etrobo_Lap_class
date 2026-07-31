@@ -1,20 +1,21 @@
+//攻略パッケージ
 #include "app.h"
-#include "kernel.h"                 //タスク系
+//制御パッケージ            
 #include "LineTraceRunner.h"
-#include "PIDController.h"
-#include "TrapezoidController.h"
-#include "DistanceCalculator.h"
 #include "GyroTraceRunner.h"
-#include "Motor.h" 
+//演算パッケージ
+#include "PIDCalculator.h"
+#include "TrapezoidCalculator.h"
+#include "DistanceCalculator.h"
+//デバイスパッケージ
+#include "Motor.h"
 #include "ForceSensor.h" 
 #include "ColorSensor.h"
+//ログ用
 #include "Logger.h"
-#include "Battery.h"
-#include "Clock.h"
+//タスク系
+#include "kernel.h"   
 #include "kernel_cfg.h"
-
-#include <stdio.h>
-#include <string.h>
 
 using namespace spikeapi;
 
@@ -33,14 +34,13 @@ Motor leftWheel(EPort::PORT_B,Motor::EDirection::COUNTERCLOCKWISE,true);
 Motor rightWheel(EPort::PORT_A,Motor::EDirection::CLOCKWISE,true);
 ForceSensor forceSensor(EPort::PORT_D);
 ColorSensor colorSensor(EPort::PORT_E);
-Clock clock;
 
-PIDController pidController;
-TrapezoidController trapezoidController;
+PIDCalculator pidCalculator;
+TrapezoidCalculator trapezoidCalculator;
 
-LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidController);
+LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidCalculator);
 DistanceCalculator distanceCalculator(leftWheel, rightWheel);
-GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidController, trapezoidController);
+GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCalculator, trapezoidCalculator);
 Logger logger(colorSensor, leftWheel, rightWheel);
 /* インスタンス生成ここまで */
 
@@ -60,15 +60,17 @@ void main_task(intptr_t exinf)
     //フォースセンサボタン押下待ち
     while (!forceSensor.isTouched());
 
-    //HSV取得
+    //HSV構造体定義
     ColorSensor::HSV hsv;
 
     //メインループ10msec周期
     while(true)
     {
+        //HSV取得
         colorSensor.getHSV(hsv);
+        //ライントレース走行開始
         lineTraceRunner.run();
-        // 青
+        // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&
             hsv.s >= 50 &&
             hsv.v >= 20)

@@ -6,14 +6,14 @@
 GyroTraceRunner::GyroTraceRunner(
     Motor& leftMotor,
     Motor& rightMotor,
-    DistanceDetector& distancedetector,
-    PIDCalculate& pidCalculate,
-    TrapezoidCalculate& trapezoidCalculate)
+    DistanceCalculator& distanceCalculator,
+    PIDCalculator& pidCalculate,
+    TrapezoidCalculator& trapezoidCalculate)
     : mLeftMotor(leftMotor),
       mRightMotor(rightMotor),
-      mDistanceDetector(distancedetector),
-      mPIDCalculate(pidCalculate),
-      mTrapezoidCalculate(trapezoidCalculate),
+      mDistanceCalculator(distanceCalculator),
+      mPIDCalculator(pidCalculate),
+      mTrapezoidCalculator(trapezoidCalculate),
       mBaseSpeed(60)
 {
 }
@@ -21,21 +21,21 @@ GyroTraceRunner::GyroTraceRunner(
 void GyroTraceRunner::move(bool direction, int distance)
 {
     mImu.resetHeading();                //ジャイロリセット
-    mDistanceDetector.reset();        //距離リセット 
-    mPIDCalculate.reset();             //微分項リセット  
+    mDistanceCalculator.reset();        //距離リセット 
+    mPIDCalculator.reset();             //微分項リセット  
 
     // 直進用PID
-    mPIDCalculate.setGain(
+    mPIDCalculator.setGain(
         3.0,
         0.0,
         0.0);
 
-    while(mDistanceDetector.getDistance() < distance){
+    while(mDistanceCalculator.getDistance() < distance){
         float current =
-            mDistanceDetector.getDistance();
+            mDistanceCalculator.getDistance();
 
         int speed =
-            mTrapezoidCalculate.getSpeed(
+            mTrapezoidCalculator.getSpeed(
                 current,
                 distance
             );
@@ -50,7 +50,7 @@ void GyroTraceRunner::move(bool direction, int distance)
         
         // 目標角度は0°
         float error = 0.0f - heading;
-        float correction = mPIDCalculate.calculate(error);
+        float correction = mPIDCalculator.calculate(error);
 
         int leftPower = 0;
         int rightPower = 0;
@@ -78,9 +78,9 @@ void GyroTraceRunner::move(bool direction, int distance)
 void GyroTraceRunner::turn(float targetHeading)
 {
     mImu.resetHeading();
-    mPIDCalculate.reset();
+    mPIDCalculator.reset();
 
-    mPIDCalculate.setGain(
+    mPIDCalculator.setGain(
         0.6,
         0.0,
         0.0);
@@ -122,7 +122,7 @@ void GyroTraceRunner::turn(float targetHeading)
 
         // PID制御
         // 誤差が5°を超える間はPID制御により旋回出力を計算する。
-        int turnPower = abs(mPIDCalculate.calculate(error)); 
+        int turnPower = abs(mPIDCalculator.calculate(error)); 
 
         //PID計算結果が40以上なら40に制限し、30以下なら30に引き上げる
         //上限を決めるのは安定させるため、下限を決めるのは走行体のスタックを防ぐため

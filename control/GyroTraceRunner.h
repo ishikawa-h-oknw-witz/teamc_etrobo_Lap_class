@@ -3,22 +3,22 @@
 
 #include "Motor.h"
 #include "DistanceCalculator.h"
-#include "PIDCalculate.h"
-#include "TrapezoidCalculate.h"
+#include "PIDCalculator.h"
+#include "TrapezoidCalculator.h"
 #include "IMU.h"
 #include "Clock.h"
 
 using namespace spikeapi;
 
-class ScenarioRunner
+class GyroTraceRunner
 {
 public:
-    ScenarioRunner(
+    GyroTraceRunner(
             Motor& leftMotor,
             Motor& rightMotor,
             DistanceCalculator& distanceCalculator,
-            PIDCalculate& pidCalculate,
-            TrapezoidCalculate& trapezoidCalculate);
+            PIDCalculator& pidCalculate,
+            TrapezoidCalculator& trapezoidCalculate);
 
     //前後退走行
     void move(bool direction, int distance);
@@ -30,8 +30,8 @@ private:
     Motor& mLeftMotor;
     Motor& mRightMotor;
     DistanceCalculator& mDistanceCalculator;
-    PIDCalculate& mPIDCalculate;
-    TrapezoidCalculate& mTrapezoidCalculate;
+    PIDCalculator& mPIDCalculator;
+    TrapezoidCalculator& mTrapezoidCalculator;
     IMU mImu;
     Clock mClock;
     int mBaseSpeed;
