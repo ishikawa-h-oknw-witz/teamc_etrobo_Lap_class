@@ -78,7 +78,7 @@ void main_task(intptr_t exinf)
         // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&
             hsv.s >= 50 &&
-            hsv.v >= 20 && hsv.v <= 60)
+            hsv.v >= 20)
         {
             Logger::printf("青検知");
             leftWheel.stop();
@@ -86,9 +86,9 @@ void main_task(intptr_t exinf)
             break;
         }
         Logger::printf("ループ");
-        tslp_tsk(10 * 1000);
+        //tslp_tsk(10 * 1000);
 
-        if (SeanID > 7){
+        if (SeanID > 12){
             break;
         }
     }
