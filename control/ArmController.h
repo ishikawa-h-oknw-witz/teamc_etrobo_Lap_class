@@ -20,6 +20,8 @@ public:
 
     void moveArmUp();
 
+    void resetAngle();
+
 private:
     Motor& mArmMotor;
 

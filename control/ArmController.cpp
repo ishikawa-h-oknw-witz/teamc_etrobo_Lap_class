@@ -2,34 +2,59 @@
 
 //コンストラクタ
 ArmController::ArmController(
-    Motor& ArmMotor)
-    : mArmMotor(ArmMotor)
+    Motor& armMotor)
+    : mArmMotor(armMotor)
 {
 }
 
-void ArmController::setMaxAngle(int maxangle)
+void ArmController::resetAngle()
 {
-    if( maxangle > 90 )
+    mArmMotor.resetCount();
+}
+
+void ArmController::setMaxAngle(int maxAngle)
+{
+    if(maxAngle > 90)
     {
         mMaxAngle = 90;
     }
     else
     {
-        mMaxAngle = maxangle;
+        mMaxAngle = maxAngle;
     }
 }
 
 void ArmController::moveArm(int angle)
 {
+    // 上限チェック
+    if(angle > mMaxAngle)
+    {
+        angle = mMaxAngle;
+    }
 
+    int currentAngle = mArmMotor.getCount();
+
+    while(currentAngle < angle)
+    {
+        mArmMotor.setPWM(30);
+        currentAngle = mArmMotor.getCount();
+    }
+
+    while(currentAngle > angle)
+    {
+        mArmMotor.setPWM(-30);
+        currentAngle = mArmMotor.getCount();
+    }
+
+    mArmMotor.stop();
 }
 
 void ArmController::moveArmDown()
 {
-
+    moveArm(0);
 }
 
 void ArmController::moveArmUp()
 {
-
+    moveArm(mMaxAngle);
 }
