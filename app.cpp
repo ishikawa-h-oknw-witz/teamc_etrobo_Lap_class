@@ -60,16 +60,19 @@ void main_task(intptr_t exinf)
     //HSV構造体定義
     ColorSensor::HSV hsv;
 
+    int SeanID = 0;
+
     //メインループ10msec周期
     while(true)
     {
         //HSV取得
         colorSensor.getHSV(hsv);
 
-        sceneManager.setSceneID(0);
+        sceneManager.setSceneID(SeanID);
+        Logger::printf("SeanID=%d", SeanID);
         if(sceneManager.SceneExecute())
         {
-            break;
+            SeanID++;
         }
 
         // 青検知
@@ -84,7 +87,12 @@ void main_task(intptr_t exinf)
         }
         Logger::printf("ループ");
         tslp_tsk(10 * 1000);
+
+        if (SeanID > 7){
+            break;
+        }
     }
+
     leftWheel.stop();
     rightWheel.stop();
     ext_tsk(); 
