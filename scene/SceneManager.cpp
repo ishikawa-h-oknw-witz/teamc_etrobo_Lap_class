@@ -32,6 +32,7 @@ struct Section
 
 // {速度, Kp, Ki, Kd, 判定種類, 走行種類, 目標距離, 目標角度, 目標色}
 Section sections[] = {
+<<<<<<< HEAD
     {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 600}, // 区間1
     { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 300}, // 区間2
     {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 300}, // 区間3
@@ -40,6 +41,16 @@ Section sections[] = {
     { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 500}, // 区間6
     { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 2300}, // 区間7
     {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 1000}  // 区間8
+=======
+    { 40, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace,  600}, // 区間1
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace,  900}, // 区間2
+    {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 1400}, // 区間3
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 1700}, // 区間4
+    {100, 0.5, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 2100}, // 区間5
+    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 2600}, // 区間6
+    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 4400}, // 区間7
+    {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 5400}  // 区間8
+>>>>>>> 3a0d35c97e8724e698416aa2a7978cc75d99ec30
 };
 
 //コンストラクタ
