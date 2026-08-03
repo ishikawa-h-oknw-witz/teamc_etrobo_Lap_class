@@ -32,7 +32,7 @@ struct Section
 
 // {速度, Kp, Ki, Kd, 判定種類, 走行種類, 目標距離, 目標角度, 目標色}
 Section sections[] = {
-    {40, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace,  600}, // 区間1
+    { 40, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace,  600}, // 区間1
     { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace,  900}, // 区間2
     {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 1400}, // 区間3
     { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 1700}, // 区間4

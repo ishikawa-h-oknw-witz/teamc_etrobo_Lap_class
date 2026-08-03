@@ -63,11 +63,19 @@ void main_task(intptr_t exinf)
     //メインループ10msec周期
     while(true)
     {
+
+        int sceneId = 0;
+
         //HSV取得
         colorSensor.getHSV(hsv);
 
-        sceneManager.setSceneID(0);
+        sceneManager.setSceneID(sceneId);
         if(sceneManager.SceneExecute())
+        {
+            Logger::printf("sceneId = %d",sceneId);
+            sceneId++;
+        }
+        if(sceneId > 7)
         {
             break;
         }
