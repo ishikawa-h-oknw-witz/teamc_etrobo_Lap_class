@@ -70,28 +70,3 @@ void LineTraceRunner::vrun()
 
     tslp_tsk(10*1000);   // 約10ms周期
 }
-
-void LineTraceRunner::srun()
-{
-    ColorSensor::HSV hsv;
-    int turn = 0;
-
-    // 反射光取得
-    mColorSensor.getHSV(hsv);
-
-    // 偏差計算
-    int error =
-        mTargetReflection - hsv.s;
-
-    // PID制御依頼
-    turn = mPIDCalculator.calculate(error);
-
-    // モータ出力
-    mLeftMotor.setPower(
-        mBaseSpeed + turn);
- 
-    mRightMotor.setPower(
-        mBaseSpeed - turn);
-
-    tslp_tsk(10*1000);   // 約10ms周期
-}
