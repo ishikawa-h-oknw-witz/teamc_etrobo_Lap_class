@@ -28,6 +28,7 @@ public:
     void setEdge(RunnerEdge edge);
 
     void run();
+    void vrun();
 
     void stop();
 
