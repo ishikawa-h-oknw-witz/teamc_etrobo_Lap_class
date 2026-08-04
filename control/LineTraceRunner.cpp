@@ -38,10 +38,10 @@ void LineTraceRunner::run()
 
     // モータ出力
     mLeftMotor.setPower(
-        mBaseSpeed - turn);
+        mBaseSpeed + turn);
  
     mRightMotor.setPower(
-        mBaseSpeed + turn);
+        mBaseSpeed - turn);
 
     tslp_tsk(10*1000);   // 約10ms周期
 }

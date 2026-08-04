@@ -32,14 +32,19 @@ struct Section
 
 // {速度, Kp, Ki, Kd, 判定種類, 走行種類, 目標距離, 目標角度, 目標色}
 Section sections[] = {
-    {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 600}, // 区間1
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 300}, // 区間2
-    {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 300}, // 区間3
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 400}, // 区間4
-    {100, 0.5, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 400}, // 区間5
-    { 70, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 500}, // 区間6
-    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 2300}, // 区間7
-    {100, 0.6, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 1000}  // 区間8
+    {100, 0.2, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 500}, // 直線1
+    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ1-1
+    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ1-2
+    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ1-3
+    {100, 0.3, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 400}, // 直線2
+    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ2-1
+    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ2-2
+    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ2-3
+    {100, 0.3, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 300}, // 直線3
+    { 60, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 400}, // カーブ3
+    {100, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 900}, // 蛇行1
+    { 80, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 900}, // 蛇行1
+    {100, 0.4, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 1500}  // 直線4
 };
 
 //コンストラクタ
@@ -99,7 +104,7 @@ bool SceneManager::SceneExecute()
         default:
             break;
         }
-        tslp_tsk(10 * 1000);
+        //tslp_tsk(10 * 1000);
     }
 
     // シーン終了
