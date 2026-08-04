@@ -8,6 +8,12 @@
 
 using namespace spikeapi;
 
+enum RunnerEdge
+{
+    LeftEdge = 1,
+    RightEdge = -1
+};
+
 class LineTraceRunner
 {
 public:
@@ -19,7 +25,11 @@ public:
 
     void setBaseSpeed(int speed);
 
+    void setEdge(RunnerEdge edge);
+
     void run();
+
+    void stop();
 
 private:
     Motor& mLeftMotor;
@@ -33,6 +43,8 @@ private:
     int mTargetReflection;
 
     int mBaseSpeed;
+
+    RunnerEdge mEdge = RunnerEdge::RightEdge;
 };
 
 #endif

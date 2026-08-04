@@ -7,11 +7,6 @@ ArmController::ArmController(
 {
 }
 
-void ArmController::resetAngle()
-{
-    mArmMotor.resetCount();
-}
-
 void ArmController::setMaxAngle(int maxAngle)
 {
     if(maxAngle > 90)
@@ -22,6 +17,11 @@ void ArmController::setMaxAngle(int maxAngle)
     {
         mMaxAngle = maxAngle;
     }
+}
+
+void ArmController::resetAngle()
+{
+    mArmMotor.resetCount();
 }
 
 void ArmController::moveArm(int angle)

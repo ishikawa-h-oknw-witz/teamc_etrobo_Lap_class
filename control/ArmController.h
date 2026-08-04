@@ -14,13 +14,13 @@ public:
 
     void setMaxAngle(int maxangle);
 
+    void resetAngle();
+
     void moveArm(int angle);
     
     void moveArmDown();
 
     void moveArmUp();
-
-    void resetAngle();
 
 private:
     Motor& mArmMotor;

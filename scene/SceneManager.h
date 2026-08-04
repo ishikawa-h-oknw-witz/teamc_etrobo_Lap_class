@@ -8,6 +8,36 @@
 #include "TargetDistanceDetector.h"
 #include "DistanceCalculator.h"
 
+enum class ActionType
+{
+    LineTrace,
+    Move,
+    Turn
+};
+
+enum class Color
+{
+    None,
+    Red,
+    Blue,
+    Yellow,
+    Green,
+    Gray,
+    Black,
+    White
+};
+
+struct LineTraceScene
+{
+    int sceneId;
+    int targetDistance;
+    int speed;
+    RunnerEdge edge;
+    Color finishColor;
+    int targetReflection;
+    PID pid;
+};
+
 class SceneManager
 {
 public:
@@ -21,6 +51,7 @@ public:
 
     int getSceneID();
     void setSceneID(int sceneid);
+    void setActionType(ActionType actiontype);
     bool SceneExecute();
     void setParameter(int sceneId);
 
@@ -33,5 +64,6 @@ private:
     DistanceCalculator& mDistanceCalculator;
 
     int mSceneId;
+    ActionType mActionType;
     IEventDetector* mEventDetector;
 };

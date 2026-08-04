@@ -1,6 +1,13 @@
 #ifndef PID_CALCULATOR_H
 #define PID_CALCULATOR_H
 
+struct PID
+{
+    float kp;
+    float ki;
+    float kd;
+};
+
 class PIDCalculator
 {
 public:
@@ -13,13 +20,11 @@ public:
     void reset();
  
 private:
-    float mKp;
-    float mKi;
-    float mKd;
- 
     float mIntegral;
  
     float mPreviousError;
+
+    PID mPID;
 };
  
 #endif

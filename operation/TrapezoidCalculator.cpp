@@ -1,33 +1,25 @@
 #include "TrapezoidCalculator.h"
 
-TrapezoidCalculator::TrapezoidCalculator()
-    : mStartSpeed(30),
-      mMaxSpeed(100),
-      mEndSpeed(30),
+TrapezoidCalculator::TrapezoidCalculator(
+            DistanceCalculator& distanceCalculator)
+    : mDistanceCalculator(distanceCalculator),
       mAccelDistance(100.0f),
       mDecelDistance(200.0f)
 {
 }
 
-void TrapezoidCalculator::setParameter(
-    int startSpeed,
-    int maxSpeed,
-    int endSpeed,
-    float accelDistance,
-    float decelDistance)
+void TrapezoidCalculator::setParameter(TrapezoidParameter parameter)
 {
-    mStartSpeed = startSpeed;
-    mMaxSpeed = maxSpeed;
-    mEndSpeed = endSpeed;
-    mAccelDistance = accelDistance;
-    mDecelDistance = decelDistance;
+    mStartSpeed = parameter.startSpeed;
+    mMaxSpeed = parameter.maxSpeed;
+    mEndSpeed = parameter.endSpeed;
+    mTotalDistance = parameter.totalDistance;
 }
 
-int TrapezoidCalculator::getSpeed(
-    float currentDistance,
-    float totalDistance)
+int TrapezoidCalculator::getSpeed()
 {
-    float remainingDistance = totalDistance - currentDistance;
+    int currentDistance = mDistanceCalculator.getDistance();
+    int remainingDistance = mTotalDistance - currentDistance;
 
     // 加速区間
     if (currentDistance < mAccelDistance)
@@ -36,7 +28,7 @@ int TrapezoidCalculator::getSpeed(
             (mMaxSpeed - mStartSpeed)
             * currentDistance / mAccelDistance;
     }
-
+    
     // 減速区間
     if (remainingDistance < mDecelDistance)
     {
@@ -47,4 +39,5 @@ int TrapezoidCalculator::getSpeed(
 
     // 定速区間
     return mMaxSpeed;
+
 }
