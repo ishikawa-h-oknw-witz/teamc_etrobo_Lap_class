@@ -71,17 +71,19 @@ void main_task(intptr_t exinf)
         //HSV取得
         colorSensor.getHSV(hsv);
 
-        armController.setMaxAngle(90);
+        /*armController.setMaxAngle(90);
         armController.moveArmUp();
         tslp_tsk(3000*1000);
-        //armController.moveArmDown();
+        armController.moveArmDown();*/
 
-        /*sceneManager.setSceneID(SeanID);
+        ActionType actiontype = ActionType::LineTrace;
+        sceneManager.setActionType(actiontype);
+        sceneManager.setSceneID(SeanID);
         Logger::printf("SeanID=%d", SeanID);
         if(sceneManager.SceneExecute())
         {
             SeanID++;
-        }*/
+        }
 
         // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&
