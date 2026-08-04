@@ -21,7 +21,6 @@ public:
 
     void run();
     void vrun();
-    void srun();
 
 private:
     Motor& mLeftMotor;
