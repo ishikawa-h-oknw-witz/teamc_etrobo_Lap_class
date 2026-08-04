@@ -5,6 +5,7 @@
 //制御パッケージ            
 #include "LineTraceRunner.h"
 #include "GyroTraceRunner.h"
+#include "ArmController.h"
 //演算パッケージ
 #include "PIDCalculator.h"
 #include "TrapezoidCalculator.h"
@@ -24,6 +25,7 @@ using namespace spikeapi;
 /* インスタンス生成 */
 Motor leftWheel(EPort::PORT_B,Motor::EDirection::COUNTERCLOCKWISE,true);
 Motor rightWheel(EPort::PORT_A,Motor::EDirection::CLOCKWISE,true);
+Motor ArmMotor(EPort::PORT_C,Motor::EDirection::COUNTERCLOCKWISE,true);
 ForceSensor forceSensor(EPort::PORT_D);
 ColorSensor colorSensor(EPort::PORT_E);
 
@@ -33,6 +35,7 @@ DistanceCalculator distanceCalculator(leftWheel, rightWheel);
 
 LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidCalculator);
 GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCalculator, trapezoidCalculator);
+ArmController armController(ArmMotor);
 
 TargetDistanceDetector targetDistanceDetector(distanceCalculator);
 SceneManager sceneManager(lineTraceRunner, gyroTraceRunner, pidCalculator, trapezoidCalculator, targetDistanceDetector, distanceCalculator);
@@ -68,12 +71,17 @@ void main_task(intptr_t exinf)
         //HSV取得
         colorSensor.getHSV(hsv);
 
-        sceneManager.setSceneID(SeanID);
+        armController.setMaxAngle(90);
+        armController.moveArmUp();
+        tslp_tsk(3000*1000);
+        //armController.moveArmDown();
+
+        /*sceneManager.setSceneID(SeanID);
         Logger::printf("SeanID=%d", SeanID);
         if(sceneManager.SceneExecute())
         {
             SeanID++;
-        }
+        }*/
 
         // 青検知
         if (hsv.h >= 200 && hsv.h <= 260 &&

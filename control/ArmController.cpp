@@ -36,13 +36,13 @@ void ArmController::moveArm(int angle)
 
     while(currentAngle < angle)
     {
-        mArmMotor.setPWM(30);
+        mArmMotor.setPower(30);
         currentAngle = mArmMotor.getCount();
     }
 
     while(currentAngle > angle)
     {
-        mArmMotor.setPWM(-30);
+        mArmMotor.setPower(-30);
         currentAngle = mArmMotor.getCount();
     }
 
