@@ -20,6 +20,7 @@ public:
     void setBaseSpeed(int speed);
 
     void run();
+    void vrun();
 
 private:
     Motor& mLeftMotor;
