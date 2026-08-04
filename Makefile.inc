@@ -6,6 +6,7 @@ APPL_CXXOBJS += \
     operation/TrapezoidCalculator.o \
     control/LineTraceRunner.o \
     control/GyroTraceRunner.o \
+    control/ArmController.o \
     scene/SceneManager.o \
     detect/TargetDistanceDetector.o \
     Logger.o \
