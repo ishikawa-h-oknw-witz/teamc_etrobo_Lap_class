@@ -1,5 +1,6 @@
 #include "LineTraceRunner.h"
 #include "Logger.h"
+#include "SceneManager.h"
 
 // コンストラクタ
 LineTraceRunner::LineTraceRunner(
@@ -21,6 +22,11 @@ void LineTraceRunner::setBaseSpeed(int speed)
     mBaseSpeed = speed;
 }
 
+void LineTraceRunner::setEdge(RunnerEdge edge)
+{
+    mEdge = edge;
+}
+
 void LineTraceRunner::run()
 {
     int turn = 0;
@@ -38,12 +44,18 @@ void LineTraceRunner::run()
 
     // モータ出力
     mLeftMotor.setPower(
-        mBaseSpeed + turn);
+        mBaseSpeed - mEdge * turn);
  
     mRightMotor.setPower(
-        mBaseSpeed - turn);
+        mBaseSpeed + mEdge * turn);
 
     tslp_tsk(10*1000);   // 約10ms周期
+}
+
+void LineTraceRunner::stop()
+{
+    mLeftMotor.stop();
+    mRightMotor.stop();
 }
 
 void LineTraceRunner::vrun()

@@ -30,8 +30,8 @@ ForceSensor forceSensor(EPort::PORT_D);
 ColorSensor colorSensor(EPort::PORT_E);
 
 PIDCalculator pidCalculator;
-TrapezoidCalculator trapezoidCalculator;
 DistanceCalculator distanceCalculator(leftWheel, rightWheel);
+TrapezoidCalculator trapezoidCalculator(distanceCalculator);
 
 LineTraceRunner lineTraceRunner(leftWheel, rightWheel, colorSensor, pidCalculator);
 GyroTraceRunner gyroTraceRunner(leftWheel, rightWheel, distanceCalculator, pidCalculator, trapezoidCalculator);

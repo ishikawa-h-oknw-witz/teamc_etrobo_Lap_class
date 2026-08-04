@@ -10,6 +10,12 @@
 
 using namespace spikeapi;
 
+enum class Direction
+{
+    front,
+    back
+};
+
 class GyroTraceRunner
 {
 public:
@@ -19,12 +25,20 @@ public:
             DistanceCalculator& distanceCalculator,
             PIDCalculator& pidCalculate,
             TrapezoidCalculator& trapezoidCalculate);
+    
+    void setDirection(Direction direction);
+
+    void setBasespeed(int speed);
+
+    void setTargetAngle(float targetAngle);
 
     //前後退走行
-    void move(bool direction, int distance);
+    void move();
 
     //旋回
-    void turn(float targetHeading);
+    void turn();
+
+    void stop();
 
 private:
     Motor& mLeftMotor;
@@ -35,5 +49,7 @@ private:
     IMU mImu;
     Clock mClock;
     int mBaseSpeed;
+    float mTargetAngle;
+    Direction mDirection;
 };
 #endif

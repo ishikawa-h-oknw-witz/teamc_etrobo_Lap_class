@@ -1,50 +1,22 @@
 #include "SceneManager.h"
 #include "Logger.h"
 
-enum class JudgeType
+// {シーンID, 目標距離, 速度, 走行エッジ, 終了色, 目標輝度, {Kp, Ki, Kd}}
+LineTraceScene lineTraceScenes[] =
 {
-    Distance,
-    Angle,
-    Color
-};
-
-enum class RunnerType
-{
-    LineTrace,
-    GyroTrace_move,
-    GyroTrace_turn
-};
-
-struct Section
-{
-    int speed;
-    float kp;
-    float ki;
-    float kd;
-
-    JudgeType judgeType;
-    RunnerType runnerType;
-
-    int targetDistance;
-    //float targetAngle;
-    //Color targetColor;
-};
-
-// {速度, Kp, Ki, Kd, 判定種類, 走行種類, 目標距離, 目標角度, 目標色}
-Section sections[] = {
-    {100, 0.2, 0.0, 0.2, JudgeType::Distance, RunnerType::LineTrace, 500}, // 直線1
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ1-1
-    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ1-2
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ1-3
-    {100, 0.3, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 400}, // 直線2
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 150}, // カーブ2-1
-    { 70, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ2-2
-    { 80, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 100}, // カーブ2-3
-    {100, 0.3, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 300}, // 直線3
-    { 60, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 400}, // カーブ3
-    {100, 0.6, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 900}, // 蛇行1
-    { 80, 0.5, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 900}, // 蛇行1
-    {100, 0.4, 0.0, 0.4, JudgeType::Distance, RunnerType::LineTrace, 1500}  // 直線4
+    { 0,  500, 100, RunnerEdge::RightEdge, Color::None, 50, {0.2f, 0.0f, 0.2f} }, // 直線1
+    { 1,  150,  80, RunnerEdge::RightEdge, Color::None, 50, {0.6f, 0.0f, 0.4f} }, // カーブ1-1
+    { 2,  100,  70, RunnerEdge::RightEdge, Color::None, 50, {0.5f, 0.0f, 0.4f} }, // カーブ1-2
+    { 3,  150,  80, RunnerEdge::RightEdge, Color::None, 50, {0.6f, 0.0f, 0.4f} }, // カーブ1-3
+    { 4,  400, 100, RunnerEdge::RightEdge, Color::None, 50, {0.3f, 0.0f, 0.4f} }, // 直線2
+    { 5,  150,  80, RunnerEdge::RightEdge, Color::None, 50, {0.6f, 0.0f, 0.4f} }, // カーブ2-1
+    { 6,  100,  70, RunnerEdge::RightEdge, Color::None, 50, {0.5f, 0.0f, 0.4f} }, // カーブ2-2
+    { 7,  100,  80, RunnerEdge::RightEdge, Color::None, 50, {0.6f, 0.0f, 0.4f} }, // カーブ2-3
+    { 8,  300, 100, RunnerEdge::RightEdge, Color::None, 50, {0.3f, 0.0f, 0.4f} }, // 直線3
+    { 9,  400,  60, RunnerEdge::RightEdge, Color::None, 50, {0.5f, 0.0f, 0.4f} }, // カーブ3
+    {10,  900, 100, RunnerEdge::RightEdge, Color::None, 50, {0.6f, 0.0f, 0.4f} }, // 蛇行1
+    {11,  900,  80, RunnerEdge::RightEdge, Color::None, 50, {0.5f, 0.0f, 0.4f} }, // 蛇行2
+    {12, 1500, 100, RunnerEdge::RightEdge, Color::None, 50, {0.4f, 0.0f, 0.4f} }  // 直線4
 };
 
 //コンストラクタ
@@ -76,28 +48,32 @@ void SceneManager::setSceneID(int sceneId)
     mSceneId = sceneId;
 }
 
+void SceneManager::setActionType(ActionType actiontype)
+{
+    mActionType = actiontype;
+}
+
 bool SceneManager::SceneExecute()
 {
     setParameter(mSceneId);
-    const Section& section = sections[mSceneId];
 
     mDistanceCalculator.reset();
     
     while(!mEventDetector->judge())
     {
         // 走行実行
-        switch (section.runnerType)
+        switch (mActionType)
         {
-        case RunnerType::LineTrace:
+        case ActionType::LineTrace:
             mLineTraceRunner.run();
             break;
 
         /*
-        case RunnerType::GyroTrace_move:
+        case ActionType::Move:
             mGyroTraceRunner.move();
             break;
 
-        case RunnerType::GyroTrace_turn:
+        case ActionType::Turn:
             mGyroTraceRunner.turn();
             break;
         */
@@ -113,29 +89,39 @@ bool SceneManager::SceneExecute()
 
 void SceneManager::setParameter(int sceneId)
 {
-    const Section& section = sections[sceneId];
 
-    // ライントレース
-    mLineTraceRunner.setBaseSpeed(section.speed);
-
-    // ジャイロトレース(ラリーで必要)
-
-    // PID
-    mPIDCalculator.setGain(
-        section.kp,
-        section.ki,
-        section.kd);
-
-    switch (section.judgeType)
+    switch(mActionType)
     {
-    case JudgeType::Distance:
-        // シーン終了距離
-        mTargetDistanceDetector.setTargetDistance(section.targetDistance);
-        mEventDetector = &mTargetDistanceDetector;
+    case ActionType::LineTrace:
+        const LineTraceScene& linetracescene = lineTraceScenes[mSceneId];
+
+        // ライントレース
+        mLineTraceRunner.setBaseSpeed(linetracescene.speed);
+
+        // PID
+        mPIDCalculator.setGain(
+            linetracescene.pid.kp,
+            linetracescene.pid.ki,
+            linetracescene.pid.kd);
+
+        // エッジ
+        mLineTraceRunner.setEdge(linetracescene.edge);
+
+        // 走行距離
+        if (linetracescene.targetDistance != 0)
+        {
+            mTargetDistanceDetector.setTargetDistance(linetracescene.targetDistance);
+            mEventDetector = &mTargetDistanceDetector;
+        }
         break;
-        
-    default:
-        break;
+
+        /*
+        case ActionType::Move:
+            mGyroTraceRunner.move();
+            break;
+
+        case ActionType::Turn:
+            mGyroTraceRunner.turn();
+            break;*/
     }
-    // 台形制御(ラリーで必要)
 }

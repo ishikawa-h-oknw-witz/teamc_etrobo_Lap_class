@@ -2,19 +2,16 @@
  
 // コンストラクタ
 PIDCalculator::PIDCalculator()
-    : mKp(0.6),
-      mKi(0.0),
-      mKd(0.1),
-      mIntegral(0),
+    : mIntegral(0),
       mPreviousError(0)
 {
 }
 
 void PIDCalculator::setGain(float kp, float ki, float kd)
 {
-    mKp = kp;
-    mKi = ki;
-    mKd = kd;
+    mPID.kp = kp;
+    mPID.ki = ki;
+    mPID.kd = kd;
 }
 
 void PIDCalculator::reset()
@@ -37,9 +34,9 @@ float PIDCalculator::calculate(float error)
  
     // PID計算
     float turn =
-        mKp * error +
-        mKi * mIntegral +
-        mKd * diff;
+        mPID.kp * error +
+        mPID.ki * mIntegral +
+        mPID.kd * diff;
  
     mPreviousError = error;
 
